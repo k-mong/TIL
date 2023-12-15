@@ -10,13 +10,26 @@ export const afterUploadImage = (req, res) => {
 // 게시글 등록
 export const uploadBoard = async(req, res, next) => {
     try {
+        const boardAddress = await prisma.address.findFirst({
+            where : {
+                sido: req.body.sido,
+                gugun: req.body.gugun,
+                dong: req.body.dong,
+                bunji: req.body.bunji,
+            }
+        });
+        if (!boardAddress) {
+            return res.status(404).send('주소를 찾을 수 없습니다.');
+        }
         const { size, address, pyeong, style, paied, monthPay, deposit, maintenance, floor, elevator, parking, options, title, content, img } = req.body;
         const images = Array.isArray(img) ? img.map((image) => ({ name: image })) : [];
-        const post = await prisma.board.create({
+        const board = await prisma.board.create({
             size,
-            sido: address.sido,
-            gugun: address.gugun,
-            dong: address.dong,
+            address: {
+                connect: {
+                    id: boardAddress.id,
+                },
+            },
             pyeong,
             style,
             paied,
