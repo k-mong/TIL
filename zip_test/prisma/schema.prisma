@@ -43,29 +43,25 @@ enum Option{
 model Board{
   seq Int @id @default(autoincrement())
 
-  size Boolean  // 원룸, 투룸
-  pyeong Int  // 평수
-  style Style // 오픈형, 분리형 복층형,
-  paied Boolean // 월세, 전세
-  deposit Int // 보증금
-  monthPay Int  //월세
+  size Boolean
+  address String @db.VarChar(200)
+  addressDetail String @db.VarChar(200)
+  pyeong Int
+  style Style
+  paied Boolean
+  deposit Int
+  monthPay Int
 
-  maintenance Boolean @default(false) // 관리비 기본은 없음
-  maintenanceValue Int
+  maintenance Int?
 
-  floor Int // 층수
-  elevator Boolean @default(false)  // 엘리베이터 기본은 없음
-  parking Boolean @default(false) // 주차유무 기본은 없음
-  valueForOption Option // 옵션
-  title String @db.VarChar(200) // 제목
-  content String @db.LongText // 글
-
+  floor Int
+  elevator Boolean
+  parking Boolean
+  Option Option?
+  title String @db.VarChar(200)
+  content String @db.LongText
   images Image[]
   likes Like[]
-
-  address Address @relation(fields: [addressId], references: [id])
-  addressId Int
-  
 
   userId String
   user User @relation(fields: [userId], references: [id])
@@ -88,17 +84,4 @@ model Like {
   // Foreign keys
   user      User      @relation(fields: [userId], references: [id])
   board     Board     @relation(fields: [boardId], references: [seq])
-}
-
-model Address {
-  id       Int      @id @default(autoincrement())
-  zipNum   String   @db.VarChar(200)
-  sido     String   @db.VarChar(200)
-  gugun    String   @db.VarChar(200)
-  dong     String   @db.VarChar(200)
-  zipcode  String   @db.VarChar(200)
-  bunji    String   @db.VarChar(200)
-
-  // Address 모델과 Board 모델 간의 관계 정의
-  boards   Board[]
 }

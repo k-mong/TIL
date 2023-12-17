@@ -10,41 +10,33 @@ export const afterUploadImage = (req, res) => {
 // 게시글 등록
 export const uploadBoard = async(req, res, next) => {
     try {
-        const boardAddress = await prisma.address.findFirst({
-            where : {
-                sido: req.body.sido,
-                gugun: req.body.gugun,
-                dong: req.body.dong,
-                bunji: req.body.bunji,
-            }
-        });
-        if (!boardAddress) {
-            return res.status(404).send('주소를 찾을 수 없습니다.');
-        }
-        const { size, address, pyeong, style, paied, monthPay, deposit, maintenance, floor, elevator, parking, options, title, content, img } = req.body;
-        const images = Array.isArray(img) ? img.map((image) => ({ name: image })) : [];
+        const { size, address, addressDetail, style, paied, monthPay, deposit, maintenance, pyeong, floor, elevator, parking, Option, title, content, img } = req.body;
+        const images = Array.isArray(req.body.url) ? req.body.url.map((image) => ({ name: image })) : [];
+
         const board = await prisma.board.create({
-            size,
-            address: {
-                connect: {
-                    id: boardAddress.id,
-                },
+            data: {
+                size,
+                address,
+                addressDetail,
+                style,
+                paied,
+                monthPay,
+                deposit,
+                maintenance,
+                pyeong,
+                floor,
+                elevator,
+                parking,
+                Option,
+                title,
+                content,
+                img: images,
+                //UserId: req.user.id,
             },
-            pyeong,
-            style,
-            paied,
-            monthPay,
-            deposit,
-            maintenance,
-            floor,
-            elevator,
-            parking,
-            options,
-            title,
-            content,
-            images,
-            UserId: req.user.id,
+            
+            
         });
+        console.log(board);
         res.send('게시글등록 성공');
     } catch (error) {
         console.log(error);
@@ -85,6 +77,52 @@ export const updateBoard = async (req, res, next) => {
         }
     } catch (error) {
         console.error(error);
+        next(error);
+    }
+};
+
+export const Like = async(req, res, next) => {
+    try {
+        const board = await prisma.board.findFirst({ where: { id: req.params.id }});
+
+        if(!board){
+            return res.status(404).send('없는 게시글 입니다.');
+        }
+
+        await prisma.board.update({
+            where: { id: board.id },
+            data: {
+                likes: {
+                    connect: { id: req.user.id }
+                }
+            }
+        });
+        res.send('좋아요');
+    } catch(error) {
+        console.log(error);
+        next(error);
+    }
+};
+
+export const unLike = async(req, res, next) => {
+    try {
+        const board = await prisma.board.findFirst({ where: { id: req.params.id }});
+
+        if(!board){
+            return res.status(404).send('없는 게시글 입니다.');
+        }
+
+        await prisma.board.update({
+            where: { id: board.id },
+            data: {
+                likes: {
+                    disconnect: { id: req.user.id }
+                }
+            }
+        });
+        res.send('좋아요 취소');
+    } catch (error) {
+        console.log(error);
         next(error);
     }
 };
