@@ -37,8 +37,8 @@ router.post('/:id/update', updateBoard);
 
 router.delete('/:id/delete', deleteBoard);
 
-router.post(':id/Like', Like);
+router.post('/:id/Like', Like);
 
-router.delete(':id/unLike', unLike);
+router.delete('/:id/unLike', unLike);
 
 export default router;

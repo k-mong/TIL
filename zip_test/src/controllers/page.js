@@ -27,7 +27,7 @@ export const boardList = async (req, res) => {
     }
 };
 
-export const boardDetail = async (req, res) => {
+export const boardDetail = async (req, res, next) => {
     try {
         console.log('게시글 상세보기');
         const board = await prisma.board.findUnique({ 
@@ -40,6 +40,25 @@ export const boardDetail = async (req, res) => {
         res.status(200).json(board);
     } catch(error) {
         console.error(error);
+        next(error);
+    }
+};
+
+export const search = async (req, res, next) => {
+    const query = req.query.search;
+    if(!query) {
+        return res.status(404).json({ error: '게시글이 없습니다.' });
+    }
+    try {
+        let boards = [];
+            boards = await prisma.board.findMany({
+                where: { address: query },
+                select: ['title', 'deposit', 'monthPay', 'floor', 'address', 'peyeong'],
+                order: [['createdAt' , 'DESC']] // 만들어진날짜 순서대로 정렬한다
+            });
+            res.status(200).json(boards);
+    } catch(error){
+        console.log(error);
         next(error);
     }
 };
