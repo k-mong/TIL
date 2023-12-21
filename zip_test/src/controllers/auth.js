@@ -21,7 +21,7 @@ export const join = async (req, res, next) => {
         });
         console.log(user);
         if(user) {
-            return res.redirect('/join?error=exist');
+            return res.status(400).json({ error: '존재하는 사용자 입니다' });
         }
         const hash = await bcrypt.hash(password, 12);
         await prisma.user.create({
@@ -33,11 +33,10 @@ export const join = async (req, res, next) => {
                 img: "",
             },
         });
-        console.log(prisma.user);
 
-        
+        res.status(200).json(user);
     } catch (error) {
-        console.error(error);
+        res.status(500).json({ error: '서버오류발생'});
         return next(error);
     }
 };
