@@ -34,6 +34,8 @@ export const join = async (req, res, next) => {
             },
         });
         console.log(prisma.user);
+
+        
     } catch (error) {
         console.error(error);
         return next(error);
@@ -63,4 +65,8 @@ export const logout = (req, res) => {
     req.logout(() => {
         req.session.destroy();
     });
+};
+
+export const test = (req, res) => {
+    res.send('테스트');
 };

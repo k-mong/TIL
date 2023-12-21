@@ -21,4 +21,5 @@ router.get('/kakao/callback', passport.authenticate('kakao', {
   res.redirect('/'); // 성공 시에는 /로 이동
 });
 
+router.get('/test');
 export default router;
