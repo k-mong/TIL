@@ -5,7 +5,9 @@
   "type": "module",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon --exec babel-node src/index.js"
+    "dev": "nodemon --exec babel-node src/index.js",
+    "build": "babel src --out-dir dist",
+    "start": "pm2 start src/index.js --name myapp"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
