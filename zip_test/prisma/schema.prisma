@@ -54,9 +54,13 @@ model Board{
 
   maintenance Int?
 
+  hopeDate DateTime?
+
+  allfloor  Int
   floor Int
   elevator Boolean
   parking Boolean
+  parkingValue Int?
   Option Option?
   title String @db.VarChar(200)
   content String @db.LongText

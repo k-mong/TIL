@@ -21,7 +21,7 @@ export const join = async (req, res, next) => {
         });
         console.log(user);
         if(user) {
-            return res.status(400).json({ error: '존재하는 사용자 입니다' });
+            return res.status(400).json({ error: '이미 존재하는 사용자 입니다' });
         }
         const hash = await bcrypt.hash(password, 12);
         await prisma.user.create({
@@ -34,7 +34,7 @@ export const join = async (req, res, next) => {
             },
         });
 
-        res.status(200).json(user);
+        res.status(200).json('회원가입 완료');
     } catch (error) {
         res.status(500).json({ error: '서버오류발생'});
         return next(error);
@@ -49,7 +49,7 @@ export const login = (req, res, next) => {
           return next(authError);
         }
         if (!user) {
-          return res.redirect(`/?error=${info.message}`);
+            return res.status(400).redirect(`/?error=${info.message}`);
         }
         return req.login(user, (loginError) => {
           if (loginError) {
@@ -57,12 +57,14 @@ export const login = (req, res, next) => {
             return next(loginError);
           }
         });
+        res.status(200).json(user);
       })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
 };
 
 export const logout = (req, res) => {
     req.logout(() => {
         req.session.destroy();
+        res.status(200).json('로그아웃 완료');
     });
 };
 
