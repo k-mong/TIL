@@ -9,6 +9,11 @@ export const join = async (req, res, next) => {
     console.log('join함수 실행');
     const { email, nickname, password } = req.body;
     const provider = req.body.provider || "LOCAL";
+
+    if (password !== confirmPW) {
+        return res.status(400).json({ error: '비밀번호와 확인 비밀번호가 일치하지 않습니다' });
+    }
+
     try {
         const user = await prisma.user.findFirst({ 
             where: {
@@ -24,11 +29,13 @@ export const join = async (req, res, next) => {
             return res.status(400).json({ error: '이미 존재하는 사용자 입니다' });
         }
         const hash = await bcrypt.hash(password, 12);
+        const confirmPWHash = await bcrypt.hash(confirmPW, 12);
         await prisma.user.create({
             data: {
                 email,
                 nickname: req.body.email,
                 password: hash,
+                confirmPWHash: confirmPWHash,
                 provider,
                 img: "",
             },

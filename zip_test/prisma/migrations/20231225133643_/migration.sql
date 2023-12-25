@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `User` ADD COLUMN `confirmPW` VARCHAR(200) NOT NULL DEFAULT '';
