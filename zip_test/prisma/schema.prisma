@@ -21,7 +21,7 @@ model User{
   email String @db.VarChar(200)
   nickname String @db.VarChar(200)
   password String @db.VarChar(200)
-  confirmPW String @db.VarChar(200) @default("")
+  confirmPW String @db.VarChar(200)
   provider Provider?
   img String? @db.VarChar(400)
 
