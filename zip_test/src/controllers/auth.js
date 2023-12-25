@@ -27,7 +27,7 @@ export const join = async (req, res, next) => {
         await prisma.user.create({
             data: {
                 email,
-                nickname,
+                nickname: req.body.email,
                 password: hash,
                 provider,
                 img: "",
