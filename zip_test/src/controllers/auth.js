@@ -57,7 +57,7 @@ export const login = (req, res, next) => {
         if (!user) {
             return res.status(400).redirect(`/?error=${info.message}`);
         }
-        return req.login(user, (loginError) => {
+        req.login(user, (loginError) => {
           if (loginError) {
             console.error(loginError);
             return next(loginError);
