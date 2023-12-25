@@ -10,6 +10,7 @@ import helmet from 'helmet';
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import database from '../database.js';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -42,6 +43,11 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     app.use(morgan('dev'));
 };
+
+app.use(cors({
+  origin: true,
+  credentials: false,
+}));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

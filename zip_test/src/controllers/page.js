@@ -27,9 +27,9 @@ export const boardList = async (req, res) => {
     }
 };
 
+// 게시글 상세보가
 export const boardDetail = async (req, res, next) => {
     try {
-        console.log('게시글 상세보기');
         const board = await prisma.board.findUnique({ 
             where: {seq: req.params.seq },
         });
@@ -44,6 +44,7 @@ export const boardDetail = async (req, res, next) => {
     }
 };
 
+// 게시글 검색
 export const search = async (req, res, next) => {
     const query = req.query.search;
     if(!query) {

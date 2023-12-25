@@ -1,0 +1,18 @@
+{
+    "size": true,
+    "address": "서울특별시 영등포구",
+    "addressDetail": "4330-10",
+    "style": "OPEN",
+    "paied": true,
+    "monthPay": 67,
+    "deposit": 3000,
+    "maintenance": "",
+    "pyeong": 8,
+    "floor": 4,
+    "elevator": false,
+    "parking": false,
+    "options": "DESK",
+    "title": "게시글등록 테스트",
+    "content": "게시글등록 글 테스트",
+    "img": ""
+}
