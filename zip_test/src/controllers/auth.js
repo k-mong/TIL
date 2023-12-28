@@ -34,7 +34,7 @@ export const join = async (req, res, next) => {
                 email,
                 nickname: req.body.email,
                 password: hash,
-                confirmPW: hash,
+                confirmPWHash: hash,
                 provider,
                 img: "",
             },
@@ -57,13 +57,13 @@ export const login = (req, res, next) => {
         if (!user) {
             return res.status(400).redirect(`/?error=${info.message}`);
         }
-        req.login(user, (loginError) => {
+        return req.login(user, (loginError) => {
           if (loginError) {
             console.error(loginError);
             return next(loginError);
           }
         });
-        res.status(200).json(user);
+        return res.status(200).json(user);
       })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
 };
 
