@@ -35,11 +35,6 @@ enum Style{
   LAYERD  // 복층형
 }
 
-enum Option{
-  ARECON
-  DESK
-
-}
 
 model Board{
   seq Int @id @default(autoincrement())
@@ -62,7 +57,6 @@ model Board{
   elevator Boolean
   parking Boolean
   parkingValue Int?
-  Option Option?
   title String @db.VarChar(200)
   content String @db.LongText
   images Image[]

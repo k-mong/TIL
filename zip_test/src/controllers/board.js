@@ -10,7 +10,7 @@ export const afterUploadImage = (req, res) => {
 // 게시글 등록
 export const uploadBoard = async(req, res, next) => {
     try {
-        const { size, address, addressDetail, pyeong, style, paied, monthPay, deposit, maintenance, allfloor, floor, elevator, parking, parkingValue, Option, title, content, img } = req.body;
+        const { size, address, addressDetail, pyeong, style, paied, monthPay, deposit, maintenance, allfloor, floor, elevator, parking, parkingValue, title, content } = req.body;
         const images = Array.isArray(req.body.url) ? req.body.url.map((image) => ({ name: image })) : [];
 
         const board = await prisma.board.create({
@@ -30,7 +30,6 @@ export const uploadBoard = async(req, res, next) => {
                 elevator,       // 엘리베이터 유무
                 parking,        // 주차유무
                 parkingValue,   // 주차비
-                Option,         // 옵션종류
                 title,          // 게시글 제목
                 content,        // 게시글 내용
                 img: images,    // 이미지
