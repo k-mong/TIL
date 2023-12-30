@@ -29,18 +29,18 @@ model User{
   likes Like[]
 }
 
-enum Style{
+enum type{
+  one
+  two
+}
+
+enum info{
   open  // 오픈형
   detachable  // 분리형
   layerd  // 복층형
 }
 
-enum size{
-  one
-  two
-}
-
-enum paied{
+enum Rtype{
   month
   year
 }
@@ -48,28 +48,32 @@ enum paied{
 model Board{
   seq Int @id @default(autoincrement())
 
-  size size
+  roomType type
   address String @db.VarChar(200)
   addressDetail String @db.VarChar(200)
-  pyeong Int
-  style Style
-  paied paied
+  roomArea Int
+  roomInfo info
+  rentType Rtype
   deposit Int
-  monthPay Int
+  month Int
 
-  maintenance Boolean
-  maintenanceValue Int?
+  cost Boolean
+  roomCost Int?
 
-  hopeDate DateTime?
+  selectDate Boolean
+  datePicker DateTime?
 
-  allfloor  Int
-  floor Int
+  totalfloor  Int
+  floorsNumber Int
+
   elevator Boolean
   parking Boolean
-  parkingValue Int?
+  parkingCost Int?
+  
   title String @db.VarChar(200)
-  content String @db.LongText
-  images Image[]
+  testArea String @db.LongText
+
+  roomImage Image[]
   likes Like[]
 
   userId String

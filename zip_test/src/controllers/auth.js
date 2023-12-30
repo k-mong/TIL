@@ -63,7 +63,8 @@ export const login = (req, res, next) => {
             return next(loginError);
           }
         });
-        return res.status(200).json(user);
+        res.status(200).json(user);
+        return res.redirect('/');
       })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
 };
 

@@ -11,30 +11,38 @@ export const afterUploadImage = (req, res) => {
 export const uploadBoard = async(req, res, next) => {
     console.log('게시글 등록 시작!');
     try {
-        //const { size, address, addressDetail, pyeong, style, paied, monthPay, deposit, maintenance, maintenanceValue, hopeDate, allfloor, floor, elevator, parking, parkingValue, title, content, img } = req.body;
+        const { roomType, address, addressDetail, roomArea, roomInfo, rentType, month, deposit, cost, roomCost, selectDate, datePicker, totalfloor, floorsNumber, elevator, parking, parkingCost, title, textArea } = req.body;
         const images = Array.isArray(req.body.url) ? req.body.url.map((image) => ({ name: image })) : [];
 
         const board = await prisma.board.create({
             data: {
-                size: req.body.size,           // 원룸 투룸
-                address: req.body.address,        // 주소
-                addressDetail: req.body.addressDetail,  // 상세주소
-                pyeong: req.body.pyeong,         // 평수
-                style: req.body.style,          // 오픈형, 분리형, 복층형
-                paied: req.body.paied,          // 월세 전세
-                deposit: req.body.deposit,        // 보증금
-                monthPay: req.body.monthPay,       // 월세
-                maintenance: req.body.maintenance,    // 유무
-                maintenanceValue: req.body.maintenanceValue,   // 관리비
-                hopeDate: req.body.hopeDate,       // 입주가능날짜
-                allfloor: req.body.allfloor,       // 전체 층 수
-                floor: req.body.floor,          // 층수
-                elevator: req.body.elevator,       // 엘리베이터 유무
-                parking: req.body.parking,        // 주차유무
-                parkingValue: req.body.parkingValue,   // 주차비
-                title: req.body.title,          // 게시글 제목
-                content: req.body.content,        // 게시글 내용
-                images: images,
+                roomType,           // 원룸 투룸
+                address,        // 주소
+                addressDetail,  // 상세주소
+                roomArea,         // 평수
+                roomInfo,          // 오픈형, 분리형, 복층형
+
+                rentType,          // 월세 전세
+                deposit,        // 보증금
+                month,       // 월세
+                cost,    // 유무
+                roomCost,   // 관리비
+
+                selectDate,
+                datePicker,       // 입주가능날짜
+
+                totalfloor,       // 전체 층 수
+                floorsNumber,          // 층수
+
+                elevator,       // 엘리베이터 유무
+                parking,        // 주차유무
+                parkingCost,   // 주차비
+                
+                roomImage: images,
+
+                title,          // 게시글 제목
+                textArea,        // 게시글 내용
+
                 UserId: req.user.id,
             },
             
