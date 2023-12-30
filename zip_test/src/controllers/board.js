@@ -34,8 +34,8 @@ export const uploadBoard = async(req, res, next) => {
                 parkingValue: req.body.parkingValue,   // 주차비
                 title: req.body.title,          // 게시글 제목
                 content: req.body.content,        // 게시글 내용
-                images: images
-                //UserId: req.user.id,
+                images: images,
+                UserId: req.user.id,
             },
             
             

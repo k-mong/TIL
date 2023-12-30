@@ -31,7 +31,7 @@ const upload = multer({
 router.post('/img', isLoggedIn, upload.array('img', 10), afterUploadImage)
 
 const upload2 = multer();
-router.post('/uploadBoard', upload2.none(), uploadBoard);
+router.post('/uploadBoard', isLoggedIn, upload2.none(), uploadBoard);
 
 router.post('/:id/update', updateBoard);
 
