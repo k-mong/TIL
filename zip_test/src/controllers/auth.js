@@ -34,7 +34,7 @@ export const join = async (req, res, next) => {
                 email,
                 nickname: req.body.email,
                 password: hash,
-                confirmPWHash: hash,
+                confirmPW: hash,
                 provider,
                 img: "",
             },
@@ -42,6 +42,7 @@ export const join = async (req, res, next) => {
 
         res.status(200).json('회원가입 완료');
     } catch (error) {
+        console.error(error);
         res.status(500).json({ error: '서버오류발생'});
         return next(error);
     }
