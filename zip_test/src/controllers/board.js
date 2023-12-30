@@ -9,31 +9,33 @@ export const afterUploadImage = (req, res) => {
 
 // 게시글 등록
 export const uploadBoard = async(req, res, next) => {
+    console.log('게시글 등록 시작!');
     try {
-        const { size, address, addressDetail, pyeong, style, paied, monthPay, deposit, maintenance, allfloor, floor, elevator, parking, parkingValue, title, content } = req.body;
+        //const { size, address, addressDetail, pyeong, style, paied, monthPay, deposit, maintenance, maintenanceValue, hopeDate, allfloor, floor, elevator, parking, parkingValue, title, content, img } = req.body;
         const images = Array.isArray(req.body.url) ? req.body.url.map((image) => ({ name: image })) : [];
 
         const board = await prisma.board.create({
             data: {
-                size,           // 원룸 투룸
-                address,        // 주소
-                addressDetail,  // 상세주소
-                pyeong,         // 평수
-                style,          // 오픈형, 분리형, 복층형
-                paied,          // 월세 전세
-                monthPay,       // 월세
-                deposit,        // 보증금
-                hopeDate,       // 입주가능날짜
-                maintenance,    // 관리비
-                allfloor,       // 전체 층 수
-                floor,          // 층수
-                elevator,       // 엘리베이터 유무
-                parking,        // 주차유무
-                parkingValue,   // 주차비
-                title,          // 게시글 제목
-                content,        // 게시글 내용
-                img: images,    // 이미지
-                UserId: req.user.id,
+                size: req.body.size,           // 원룸 투룸
+                address: req.body.address,        // 주소
+                addressDetail: req.body.addressDetail,  // 상세주소
+                pyeong: req.body.pyeong,         // 평수
+                style: req.body.style,          // 오픈형, 분리형, 복층형
+                paied: req.body.paied,          // 월세 전세
+                deposit: req.body.deposit,        // 보증금
+                monthPay: req.body.monthPay,       // 월세
+                maintenance: req.body.maintenance,    // 유무
+                maintenanceValue: req.body.maintenanceValue,   // 관리비
+                hopeDate: req.body.hopeDate,       // 입주가능날짜
+                allfloor: req.body.allfloor,       // 전체 층 수
+                floor: req.body.floor,          // 층수
+                elevator: req.body.elevator,       // 엘리베이터 유무
+                parking: req.body.parking,        // 주차유무
+                parkingValue: req.body.parkingValue,   // 주차비
+                title: req.body.title,          // 게시글 제목
+                content: req.body.content,        // 게시글 내용
+                images: images
+                //UserId: req.user.id,
             },
             
             
@@ -41,8 +43,8 @@ export const uploadBoard = async(req, res, next) => {
         console.log(board);
         res.status(200).json(board);
     } catch (error) {
+        console.error(error);
         res.status(400).json('게시글을 업로드 할 수 없습니다.');
-        next(error);
     }
 };
 

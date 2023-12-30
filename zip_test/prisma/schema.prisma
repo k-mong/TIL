@@ -30,25 +30,35 @@ model User{
 }
 
 enum Style{
-  OPEN  // 오픈형
-  DETACHABLE  // 분리형
-  LAYERD  // 복층형
+  open  // 오픈형
+  detachable  // 분리형
+  layerd  // 복층형
 }
 
+enum size{
+  one
+  two
+}
+
+enum paied{
+  month
+  year
+}
 
 model Board{
   seq Int @id @default(autoincrement())
 
-  size Boolean
+  size size
   address String @db.VarChar(200)
   addressDetail String @db.VarChar(200)
   pyeong Int
   style Style
-  paied Boolean
+  paied paied
   deposit Int
   monthPay Int
 
-  maintenance Int?
+  maintenance Boolean
+  maintenanceValue Int?
 
   hopeDate DateTime?
 
