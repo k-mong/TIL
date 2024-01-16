@@ -63,15 +63,15 @@ model Board{
   selectDate Boolean
   datePicker DateTime?
 
-  totalfloor  Int
-  floorsNumber Int
+  totalfloor  String @db.VarChar(20)
+  floorsNumber String @db.VarChar(20)
 
   elevator Boolean
   parking Boolean
   parkingCost Int?
   
   title String @db.VarChar(200)
-  testArea String @db.LongText
+  textArea String @db.LongText
 
   roomImage Image[]
   likes Like[]

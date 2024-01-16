@@ -9,4 +9,4 @@ export const isNotLoggedIn = (req, res, next) => {
       const message = encodeURIComponent('로그인한 상태입니다.');
       res.redirect('/error');
     }
-};
+}; 

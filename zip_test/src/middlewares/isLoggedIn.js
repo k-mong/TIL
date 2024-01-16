@@ -1,5 +1,6 @@
 export const isLoggedIn = (req, res, next) => {
     console.log('isLoggedIn 실행');
+    console.log('req.isAuthenticated()', req.isAuthenticated());
       if (req.isAuthenticated()) {
         next();
       } else {

@@ -43,7 +43,9 @@ export const uploadBoard = async(req, res, next) => {
                 title,          // 게시글 제목
                 textArea,        // 게시글 내용
 
-                UserId: req.user.id,
+                user: {
+                    connect: { id: req.user.id }
+                },
             },
             
             
