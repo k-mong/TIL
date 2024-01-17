@@ -12,7 +12,8 @@ export const uploadBoard = async(req, res, next) => {
     console.log('게시글 등록 시작!');
     try {
         const { roomType, address, addressDetail, roomArea, roomInfo, rentType, month, deposit, cost, roomCost, selectDate, datePicker, totalfloor, floorsNumber, elevator, parking, parkingCost, title, textArea } = req.body;
-        const images = Array.isArray(req.body.url) ? req.body.url.map((image) => ({ name: image })) : [];
+        //const images = Array.isArray(req.body.url) ? req.body.url.map((image) => ({ name: image })) : [];
+        const imageUrl = req.body.roomImage || [];
 
         const board = await prisma.board.create({
             data: {
@@ -38,7 +39,7 @@ export const uploadBoard = async(req, res, next) => {
                 parking,        // 주차유무
                 parkingCost,   // 주차비
                 
-                roomImage: images,
+                roomImage: imageUrl,
 
                 title,          // 게시글 제목
                 textArea,        // 게시글 내용
@@ -48,8 +49,9 @@ export const uploadBoard = async(req, res, next) => {
             
             
         });
-        console.log(board);
-        res.status(200).json(board);
+        //console.log(board, imageUrl);
+        //res.status(200).json({ board, imageUrl });
+        res.status(200).json('게시글 등록 완료');
     } catch (error) {
         console.error(error);
         res.status(400).json('게시글을 업로드 할 수 없습니다.');

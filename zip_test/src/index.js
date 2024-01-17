@@ -66,14 +66,14 @@ app.use(session({
   },
 }));
 
+app.use(passport.initialize());
+app.use(passport.session());
 
 if (process.env.NODE_ENV === 'production') {
   sessionOption.proxy = true;
   // sessionOption.cookie.secure = true;
 }
 
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use('/', pageRouter);
 app.use('/auth', authRouter);

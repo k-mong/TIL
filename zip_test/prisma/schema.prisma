@@ -82,7 +82,7 @@ model Board{
 
 model Image{
   seq Int @id @default(autoincrement())
-  name String @db.VarChar(200)
+  url String @db.VarChar(200)
   createdAt DateTime @default(now())
 
   boardId Int

@@ -63,9 +63,11 @@ export const login = (req, res, next) => {
             console.error(loginError);
             return next(loginError);
           }
+           //res.cookie('user_id', user.id, { httpOnly: true });
+   
+           res.status(200).json(user);
+           //res.redirect('/');
         });
-        res.status(200).json(user);
-        //res.redirect('/');
       })(req, res, next); // 미들웨어 내의 미들웨어에는 (req, res, next)를 붙인다.
 };
 
