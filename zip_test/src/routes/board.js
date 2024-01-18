@@ -33,9 +33,9 @@ router.post('/img', isLoggedIn, upload.array('img', 10), afterUploadImage)
 const upload2 = multer();
 router.post('/uploadBoard', isLoggedIn, upload.array('img', 10), uploadBoard);
 
-router.post('/:id/update', updateBoard);
+router.post('/:id/updateBoard', isLoggedIn, updateBoard);
 
-router.delete('/:id/delete', deleteBoard);
+router.delete('/:id/deleteBoard', deleteBoard);
 
 router.post('/:id/Like', Like);
 

@@ -55,35 +55,49 @@ export const uploadBoard = async(req, res, next) => {
     } catch (error) {
         console.error(error);
         res.status(400).json('게시글을 업로드 할 수 없습니다.');
+        next(error);
     }
 };
 
 // 게시글 삭제
 export const deleteBoard = async (req, res, next) => {
     try {
-       await prisma.board.destroy({ where: {id: req.params.id, userId: req.user.id }});
-       res.send('게시글을 삭제했습니다.');
+        const seqId = parseInt(req.params.id, 10);
+        const board = await prisma.board.delete({ where: {seq: seqId, userId: req.user.id }});
+       if(board){
+            res.send('게시글을 삭제했습니다.');
+       }else{
+        res.status(404).send('게시글 삭제를 실패하였습니다.')
+       }
     } catch (error) {
         console.error(error);
+        res.status(500).send('게시글 삭제 중 오류가 발생했습니다.');
         next(error);
     }
 };
 
+
+
 // 게시글 수정
 export const updateBoard = async (req, res, next) => {
     try {
-        const board = await prisma.board.findFirst({ where: {id: req.params.id, userId: req.user.id }});
-        //const date = new Date(req.body.hopeDate);
+        const seqId = parseInt(req.params.id, 10);
+        const board = await prisma.board.findFirst({ where: {seq: seqId, userId: req.user.id }});
+
+        const { deposit, month, roomCost, datePicker, title, textArea } = req.body;
+        const imageUrl = req.body.roomImage || [];
+
         if(board) {
             await prisma.board.update({
-                where: { id: board.id },
+                where: { seq: board.seq },
                 data: {
-                    monthPay: req.body.monthPay,
-                    deposit: req.body.deposit,
-                    maintenance: req.body.maintenance,
-                    hopeDate: req.body.hopeDate,
-                    title: req.body.title,
-                    content: req.body.content,
+                    deposit,
+                    month,
+                    roomCost,
+                    datePicker,
+                    title,
+                    textArea,
+                    roomImage: imageUrl
                 },
             });
             res.send('게시글이 수정됐습니다.');
@@ -92,6 +106,7 @@ export const updateBoard = async (req, res, next) => {
         }
     } catch (error) {
         console.error(error);
+        res.status(500).send('게시글 수정 중 오류가 발생했습니다.');
         next(error);
     }
 };
