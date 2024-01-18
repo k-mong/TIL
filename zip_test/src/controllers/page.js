@@ -10,12 +10,22 @@ export const renderJoin = (req, res) => {
     res.render('join', {title: '회원가입 - zipzoog'});
 };
 
-export const boardList = async (req, res) => {
+export const boardList = async (req, res, next) => {
     try{
         console.log('게시글목록 출력');
         const boards = await prisma.board.findMany({
-            select: ['title', 'deposit', 'monthPay', 'floor', 'address', 'peyeong'],
-            order: [['createdAt', 'DESC']]
+            select: {
+                title: true,
+                deposit: true,
+                month: true,
+                floorsNumber: true,
+                address: true,
+                roomArea: true,
+                roomImage: true
+            },
+            orderBy: {
+                createdAt: "desc"
+            },
         });
         if(boards.length === 0){
             res.status(404).json('게시글목록을 불러올 수 없습니다.')

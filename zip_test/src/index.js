@@ -75,7 +75,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 
-app.use('/', pageRouter);
+app.use('/page', pageRouter);
 app.use('/auth', authRouter);
 app.use('/board', boardRouter);
 app.use('/user', userRouter);
