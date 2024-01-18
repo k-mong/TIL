@@ -63,7 +63,7 @@ export const login = (req, res, next) => {
             console.error(loginError);
             return next(loginError);
           }
-           //res.cookie('user_id', user.id, { httpOnly: true });
+           res.cookie('user_id', user.id, { httpOnly: true });
    
            res.status(200).json(user);
            //res.redirect('/');
