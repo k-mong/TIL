@@ -55,7 +55,6 @@ export const uploadBoard = async(req, res, next) => {
     } catch (error) {
         console.error(error);
         res.status(400).json('게시글을 업로드 할 수 없습니다.');
-        next(error);
     }
 };
 
@@ -65,28 +64,32 @@ export const deleteBoard = async (req, res, next) => {
         const seqId = parseInt(req.params.id, 10);
         const board = await prisma.board.delete({ where: {seq: seqId, userId: req.user.id }});
        if(board){
-            res.send('게시글을 삭제했습니다.');
+            res.status(200).send('게시글을 삭제했습니다.');
        }else{
         res.status(404).send('게시글 삭제를 실패하였습니다.')
        }
     } catch (error) {
         console.error(error);
         res.status(500).send('게시글 삭제 중 오류가 발생했습니다.');
-        next(error);
     }
 };
 
 
 
 // 게시글 수정
+/*
 export const updateBoard = async (req, res, next) => {
     try {
         const seqId = parseInt(req.params.id, 10);
+        console.log('seqId:', seqId);
         const board = await prisma.board.findFirst({ where: {seq: seqId, userId: req.user.id }});
+        console.log('board:', board);
 
         const { deposit, month, roomCost, datePicker, title, textArea } = req.body;
         const imageUrl = req.body.roomImage || [];
-
+        const imageUpdateData = Array.isArray(imageUrl)
+  ? imageUrl.map(url => ({ where: { url }, data: { url } }))
+  : [];
         if(board) {
             await prisma.board.update({
                 where: { seq: board.seq },
@@ -97,10 +100,85 @@ export const updateBoard = async (req, res, next) => {
                     datePicker,
                     title,
                     textArea,
-                    roomImage: imageUrl
+                    roomImage: {
+                        set: imageUpdateData,
+                      },
                 },
             });
             res.send('게시글이 수정됐습니다.');
+        } else {
+            res.status(404).send('게시글이 존재하지 않습니다.');
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('게시글 수정 중 오류가 발생했습니다.');
+        next(error);
+    }
+};
+*/
+export const updateBoard = async (req, res, next) => {
+    try {
+        const seqId = parseInt(req.params.id, 10);
+        console.log('seqId:', seqId);
+        const board = await prisma.board.findFirst({ where: { seq: seqId, userId: req.user.id } });
+        console.log('board:', board);
+
+        const { deposit, month, roomCost, datePicker, title, textArea } = req.body;
+        // req.body.roomImage가 배열이 아니면 배열로 변환
+        const newImageUrls = Array.isArray(req.body.roomImage) ? req.body.roomImage : [req.body.roomImage];
+
+        if (board) {
+            // 현재 게시글에 연결된 모든 이미지 가져오기
+            const currentImages = await prisma.image.findMany({
+                where: { boardId: board.seq },
+            });
+
+            // 새 이미지와 현재 이미지를 비교하여 추가된 이미지와 삭제된 이미지 식별
+            const addedImages = newImageUrls.filter(newImage => !currentImages.some(currentImage => currentImage.url === newImage));
+            const deletedImages = currentImages.filter(currentImage => !newImageUrls.includes(currentImage.url));
+
+            // 추가된 이미지를 데이터베이스에 추가
+            if (addedImages.length > 0) {
+                const imagesToUpdate = addedImages[0].update.map(image => ({ url: image.url, boardId: board.seq }));
+
+                await prisma.image.createMany({
+                    data: imagesToUpdate,
+                });
+                
+                // 추가 후 이미지 가져와서 확인
+                const updatedImages = await prisma.image.findMany({
+                    where: { boardId: board.seq },
+                });
+                console.log('Updated Images:', updatedImages);
+            }
+            
+
+            // 삭제된 이미지를 데이터베이스에서 삭제
+            if (deletedImages.length > 0) {
+                await prisma.image.deleteMany({
+                    where: {
+                        boardId: board.seq,
+                        url: {
+                            in: deletedImages.map(image => image.url),
+                        },
+                    },
+                });
+            }
+
+            // 게시글 업데이트
+            await prisma.board.update({
+                where: { seq: board.seq },
+                data: {
+                    deposit,
+                    month,
+                    roomCost,
+                    datePicker,
+                    title,
+                    textArea,
+                },
+            });
+
+            res.status(200).send('게시글이 수정됐습니다.');
         } else {
             res.status(404).send('게시글이 존재하지 않습니다.');
         }

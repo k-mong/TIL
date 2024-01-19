@@ -40,8 +40,12 @@ export const boardList = async (req, res, next) => {
 // 게시글 상세보가
 export const boardDetail = async (req, res, next) => {
     try {
+        const seqId = parseInt(req.params.seq, 10);
         const board = await prisma.board.findUnique({ 
-            where: {seq: req.params.seq },
+            where: {seq: seqId},
+            include: {
+                roomImage: true, 
+            },
         });
         if (!board) {
             // 게시글이 없는 경우 예외 처리
@@ -64,11 +68,23 @@ export const search = async (req, res, next) => {
         let boards = [];
             boards = await prisma.board.findMany({
                 where: { address: query },
-                select: ['title', 'deposit', 'monthPay', 'floor', 'address', 'peyeong'],
-                order: [['createdAt' , 'DESC']] // 만들어진날짜 순서대로 정렬한다
+                //select: ['title', 'deposit', 'month', 'floorNumber', 'address', 'roomArea'],
+                select: {
+                    title: true,
+                    deposit: true,
+                    month: true,
+                    floorsNumber: true,
+                    address: true,
+                    roomArea: true,
+                    roomImage: true
+                },
+                orderBy: {
+                    createdAt: "desc"
+                },
             });
             res.status(200).json(boards);
     } catch(error){
+        console.error(error);
         res.status(500).json({ error: '서버 오류발생' });
         next(error);
     }
