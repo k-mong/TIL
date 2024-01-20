@@ -15,6 +15,7 @@ export const boardList = async (req, res, next) => {
         console.log('게시글목록 출력');
         const boards = await prisma.board.findMany({
             select: {
+                seq: true,
                 title: true,
                 deposit: true,
                 month: true,
