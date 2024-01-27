@@ -3,7 +3,7 @@ import { isLoggedIn, isNotLoggedIn } from "../middlewares/index.js";
 import fs from "fs";
 import multer from "multer";
 import path from "path";
-import { uploadBoard, deleteBoard, updateBoard, afterUploadImage } from "../controllers/board.js";
+import { uploadBoard, deleteBoard, updateBoard } from "../controllers/board.js";
 import { Like, unLike } from "../controllers/board.js";
 
 const router = Router();
@@ -28,10 +28,10 @@ const upload = multer({
     limits: { fileSize: 20 * 1024 * 1024},
 });
 
-router.post('/img', isLoggedIn, upload.array('img', 10), afterUploadImage)
+//router.post('/img', isLoggedIn, upload.array('img', 10), afterUploadImage)
 
 const upload2 = multer();
-router.post('/uploadBoard', isLoggedIn, upload.array('img', 10), uploadBoard);
+router.post('/uploadBoard', isLoggedIn, upload.array('roomImage', 10), uploadBoard);
 
 router.post('/:id/updateBoard', isLoggedIn, updateBoard);
 

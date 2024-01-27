@@ -16,3 +16,145 @@
     "content": "게시글등록 글 테스트",
     "img": ""
 }
+
+
+
+
+
+{
+    "roomType": "one",
+    "address": "서울영등포구",
+    "addressDetail": "신길동123123",
+    "roomArea": 6,
+    "roomInfo": "detachable",
+
+    "rentType": "month",
+    "deposit": 3000,
+    "month": 60,
+    "cost": true,
+    "roomCost": 7,
+
+    "selectDate": true,
+    "datePicker": "2023-01-30T12:45:00.000Z",
+
+    "totalfloor": "6",
+    "floorsNumber": "3",
+
+    "elevator": false,
+    "parking": false,
+    "parkingCost": 5,
+
+ "roomImage": {
+  "create": [
+    { "url": "https://example.com/image1.jpg" },
+    { "url": "https://example.com/image2.jpg" }
+  ]
+}, 
+
+    "title": "테스트",
+    "textArea": "테스트글"
+}
+
+
+
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"  // 사용하는 db
+  url      = env("DATABASE_URL")  // 프로젝트에 .env라는파일안에 "DATABASE_URL" 이라는 값을 갖고와서 그 값을 사용한다.( 환경변수 프로그램"실행"에 필요한 변수 를 저장하는 파일)
+}
+
+enum Provider{
+  LOCAL
+  KAKAO
+}
+
+model User{
+  id String @id @default(uuid())
+
+  email String @db.VarChar(200)
+  nickname String @db.VarChar(200)
+  password String @db.VarChar(200)
+  confirmPW String @db.VarChar(200)
+  provider Provider?
+  img String? @db.VarChar(400)
+
+  boards Board[]
+  likes Like[]
+}
+
+enum type{
+  one
+  two
+}
+
+enum info{
+  open  // 오픈형
+  detachable  // 분리형
+  layerd  // 복층형
+}
+
+enum Rtype{
+  month
+  year
+}
+
+model Board{
+  seq Int @id @default(autoincrement())
+
+  roomType type
+  address String @db.VarChar(200)
+  addressDetail String @db.VarChar(200)
+  roomArea Int
+  roomInfo info
+  rentType Rtype
+  deposit Int
+  month Int
+
+  cost Boolean
+  roomCost Int?
+
+  selectDate Boolean
+  datePicker DateTime?
+
+  totalfloor  Int
+  floorsNumber Int
+
+  elevator Boolean
+  parking Boolean
+  parkingCost Int?
+  
+  title String @db.VarChar(200)
+  testArea String @db.LongText
+
+  roomImage Image[]
+  likes Like[]
+
+  userId String
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Image{
+  seq Int @id @default(autoincrement())
+  name String @db.VarChar(200)
+  createdAt DateTime @default(now())
+
+  boardId Int
+  board Board @relation(fields: [boardId], references: [seq])
+}
+
+model Like {
+  id      Int       @id @default(autoincrement())
+  userId  String    //userId 필드는 user_id 와 연결
+  boardId Int       // boardId 필드는 board_seq 와 연결
+  
+  // Foreign keys
+  user      User      @relation(fields: [userId], references: [id])
+  board     Board     @relation(fields: [boardId], references: [seq])
+}

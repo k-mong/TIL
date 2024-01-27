@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-exports.profile = async (req, res, next) => {
+export const profile = async (req, res, next) => {
   try {
       const nick = await prisma.user.findFirst({ where: {nick: req.user.nick}});
       if (!nick) {

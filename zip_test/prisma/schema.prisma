@@ -27,6 +27,8 @@ model User{
 
   boards Board[]
   likes Like[]
+  rooms Room[]
+  chats Chat[]
 }
 
 enum type{
@@ -80,6 +82,9 @@ model Board{
 
   userId String
   user User @relation(fields: [userId], references: [id])
+
+  
+  
 }
 
 model Image{
@@ -99,4 +104,30 @@ model Like {
   // Foreign keys
   user      User      @relation(fields: [userId], references: [id])
   board     Board     @relation(fields: [boardId], references: [seq])
+}
+
+model Room {
+  id        Int       @id @default(autoincrement())
+  
+  title     String
+  createdAt DateTime  @default(now())
+
+  userId String
+  users User[]
+  chats Chat[]
+}
+
+model Chat {
+  id        Int      @id @default(autoincrement())
+  chat      String  //채팅 내용
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  User   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String?
+  Room   Room? @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId Int?
+
+  @@index([userId])
+  @@index([roomId])
 }

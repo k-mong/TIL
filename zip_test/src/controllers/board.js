@@ -2,44 +2,38 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export const afterUploadImage = (req, res) => {
-    console.log("req.file = ", req.file);
-    res.json({ url: `/img/${req.file.filename}` });
-};
-
 // 게시글 등록
 export const uploadBoard = async(req, res, next) => {
     console.log('게시글 등록 시작!');
     try {
+
         const { roomType, address, addressDetail, roomArea, roomInfo, rentType, month, deposit, cost, roomCost, selectDate, datePicker, totalfloor, floorsNumber, elevator, parking, parkingCost, title, textArea } = req.body;
-        //const images = Array.isArray(req.body.url) ? req.body.url.map((image) => ({ name: image })) : [];
-        const imageUrl = req.body.roomImage || [];
+        
 
         const board = await prisma.board.create({
             data: {
                 roomType,           // 원룸 투룸
                 address,        // 주소
                 addressDetail,  // 상세주소
-                roomArea,         // 평수
+                roomArea: Number(roomArea),         // 평수
                 roomInfo,          // 오픈형, 분리형, 복층형
 
                 rentType,          // 월세 전세
-                deposit,        // 보증금
-                month,       // 월세
-                cost,    // 유무
-                roomCost,   // 관리비
+                deposit: parseInt(deposit, 10),        // 보증금
+                month: parseInt(month, 10),       // 월세
+                cost: Boolean(String),    // 유무
+                roomCost: Number(roomCost),   // 관리비
 
-                selectDate,
+                selectDate: Boolean(String),
                 datePicker,       // 입주가능날짜
 
                 totalfloor,       // 전체 층 수
                 floorsNumber,          // 층수
 
-                elevator,       // 엘리베이터 유무
-                parking,        // 주차유무
-                parkingCost,   // 주차비
+                elevator: Boolean(String),       // 엘리베이터 유무
+                parking: Boolean(String),        // 주차유무
+                parkingCost: Number(parkingCost),   // 주차비
                 
-                roomImage: imageUrl,
 
                 title,          // 게시글 제목
                 textArea,        // 게시글 내용
@@ -49,9 +43,17 @@ export const uploadBoard = async(req, res, next) => {
             
             
         });
+        const uploadImage = req.files.map((file) => ({
+            url: `/img/${file.filename}`,
+            boardId: board.seq,
+        }));
+
+        await Promise.all(
+            uploadImage.map((image) => prisma.image.create({ data: image}))
+        )
         //console.log(board, imageUrl);
-        //res.status(200).json({ board, imageUrl });
-        res.status(200).json('게시글 등록 완료');
+        res.status(200).json({ message:'게시글 등록 완료',  board, uploadImage });
+        //res.status(200).json('게시글 등록 완료');
     } catch (error) {
         console.error(error);
         res.status(400).json('게시글을 업로드 할 수 없습니다.');

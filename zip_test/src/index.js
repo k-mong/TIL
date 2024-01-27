@@ -5,7 +5,6 @@ import path from 'path';
 import session from 'express-session';
 import dotenv from 'dotenv';
 import passport from 'passport';
-import hpp from 'hpp';
 import helmet from 'helmet';
 import { fileURLToPath } from "url";
 import { dirname } from "path";
@@ -14,6 +13,8 @@ import cors from 'cors';
 
 dotenv.config();
 
+import WebSocket from "./socket.js";
+
 import pageRouter from "./routes/page.js";
 import authRouter from "./routes/auth.js";
 import boardRouter from "./routes/board.js";
@@ -21,9 +22,9 @@ import userRouter from "./routes/user.js";
 import passportConfig from "./passport/index.js";
 
 const app = express();
+
 passportConfig();
 app.set('port', process.env.PORT || 8000);
-//app.set('view engine', 'html');
 
 database();
 
