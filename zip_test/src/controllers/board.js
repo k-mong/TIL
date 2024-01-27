@@ -11,7 +11,7 @@ export const afterUploadImage = (req, res) => {
 export const uploadBoard = async(req, res, next) => {
     console.log('게시글 등록 시작!');
     try {
-        const { roomType, address, addressDetail, roomArea, roomInfo, rentType, month, deposit, cost, roomCost, selectDate, datePicker, totalfloor, floorsNumber, elevator, parking, parkingCost, title, textArea } = req.body;
+        const { roomType, address, addressDetail, roomArea, roomInfo, rentType, month, deposit, cost, roomCost, selectDate, datePicker, totalFloors, floorsNumber, elevator, parking, parkingCost, title, textArea } = req.body;
         //const images = Array.isArray(req.body.url) ? req.body.url.map((image) => ({ name: image })) : [];
         const imageUrl = req.body.roomImage || [];
 
@@ -20,38 +20,50 @@ export const uploadBoard = async(req, res, next) => {
                 roomType,           // 원룸 투룸
                 address,        // 주소
                 addressDetail,  // 상세주소
-                roomArea,         // 평수
+                roomArea: Number(roomArea),         // 평수
                 roomInfo,          // 오픈형, 분리형, 복층형
 
                 rentType,          // 월세 전세
-                deposit,        // 보증금
-                month,       // 월세
-                cost,    // 유무
-                roomCost,   // 관리비
+                deposit: Number(deposit),        // 보증금
+                month: Number(month),       // 월세
+                cost: cost === 'true',    // 유무
+                roomCost: Number(roomCost),   // 관리비
 
-                selectDate,
-                datePicker,       // 입주가능날짜
+                selectDate: selectDate === 'true',
+                datePicker: new Date(datePicker),       // 입주가능날짜
 
-                totalfloor,       // 전체 층 수
+                totalfloor : totalFloors,       // 전체 층 수
                 floorsNumber,          // 층수
 
-                elevator,       // 엘리베이터 유무
-                parking,        // 주차유무
-                parkingCost,   // 주차비
-                
-                roomImage: imageUrl,
+                elevator : elevator === 'true',       // 엘리베이터 유무
+                parking: parking === 'true',        // 주차유무
+                parkingCost:Number(parkingCost),   // 주차비
 
                 title,          // 게시글 제목
                 textArea,        // 게시글 내용
 
-                userId: req.user.id
+                userId: 'dd62f3a3-bfcb-4fa8-8cb6-61bf93bc8ac5' //req.user.id
             },
             
             
         });
-        //console.log(board, imageUrl);
-        //res.status(200).json({ board, imageUrl });
-        res.status(200).json('게시글 등록 완료');
+        
+        
+        const imageRecords = req.files.map(file => ({
+            url: file.path, // 또는 필요한 정보
+            boardId: board.seq // 게시글 ID (아래에서 생성)
+        }));
+
+        await Promise.all(
+            imageRecords.map(imageRecord => 
+                prisma.image.create({
+                    data: imageRecord
+                })
+            )
+        );
+
+        res.status(200).json({ board, imageUrl });
+        // res.status(200).json('게시글 등록 완료');
     } catch (error) {
         console.error(error);
         res.status(400).json('게시글을 업로드 할 수 없습니다.');
