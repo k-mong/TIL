@@ -52,7 +52,7 @@ app.use(cors({
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-app.use('/img', express.static(path.join(__dirname, 'upload')));  // '/img'로 시작하는 URL에 대한 요청이 발생하면 현재 디렉토리에 있는 'upload' 폴더로
+app.use('/img', express.static(path.join(__dirname, '../', 'uploads')));  // '/img'로 시작하는 URL에 대한 요청이 발생하면 현재 디렉토리에 있는 'upload' 폴더로
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
