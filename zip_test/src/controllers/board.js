@@ -19,13 +19,13 @@ export const uploadBoard = async(req, res, next) => {
                 roomInfo,          // 오픈형, 분리형, 복층형
 
                 rentType,          // 월세 전세
-                deposit: parseInt(deposit, 10),        // 보증금
-                month: parseInt(month, 10),       // 월세
-                cost: Boolean(String),    // 유무
+                deposit: Number(deposit),        // 보증금
+                month: Number(month),       // 월세
+                cost: cost === 'true',    // 유무
                 roomCost: Number(roomCost),   // 관리비
 
                 selectDate: Boolean(String),
-                datePicker,       // 입주가능날짜
+                datePicker: new Date(datePicker),       // 입주가능날짜
 
                 totalfloor,       // 전체 층 수
                 floorsNumber,          // 층수
