@@ -24,14 +24,14 @@ export const uploadBoard = async(req, res, next) => {
                 cost: cost === 'true',    // 유무
                 roomCost: Number(roomCost),   // 관리비
 
-                selectDate: Boolean(String),
+                selectDate: selectDate === 'true',
                 datePicker: new Date(datePicker),       // 입주가능날짜
 
                 totalfloor,       // 전체 층 수
                 floorsNumber,          // 층수
 
-                elevator: Boolean(String),       // 엘리베이터 유무
-                parking: Boolean(String),        // 주차유무
+                elevator : elevator === 'true',       // 엘리베이터 유무
+                parking: parking === 'true',        // 주차유무
                 parkingCost: Number(parkingCost),   // 주차비
                 
 
