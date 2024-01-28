@@ -43,14 +43,18 @@ export const uploadBoard = async(req, res, next) => {
             
             
         });
-        const uploadImage = req.files.map((file) => ({
-            url: `/img/${file.filename}`,
-            boardId: board.seq,
+        const imageRecords = req.files.map(file => ({
+            url: file.path, // 또는 필요한 정보
+            boardId: board.seq // 게시글 ID (아래에서 생성)
         }));
 
         await Promise.all(
-            uploadImage.map((image) => prisma.image.create({ data: image}))
-        )
+            imageRecords.map(imageRecord => 
+                prisma.image.create({
+                    data: imageRecord
+                })
+            )
+        );
         //console.log(board, imageUrl);
         res.status(200).json({ message:'게시글 등록 완료',  board, uploadImage });
         //res.status(200).json('게시글 등록 완료');
@@ -77,7 +81,7 @@ export const deleteBoard = async (req, res, next) => {
 };
 
 
-/*
+
 // 게시글 수정
 export const updateBoard = async (req, res, next) => {
     try {
@@ -120,7 +124,7 @@ export const updateBoard = async (req, res, next) => {
         next(error);
     }
 };
-*/
+/*
 export const updateBoard = async (req, res, next) => {
     try {
         const seqId = parseInt(req.params.id, 10);
@@ -192,7 +196,7 @@ export const updateBoard = async (req, res, next) => {
         next(error);
     }
 };
-
+*/
 
 export const Like = async(req, res, next) => {
     try {
