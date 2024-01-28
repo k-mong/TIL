@@ -141,8 +141,7 @@ export const updateBoard = async (req, res, next) => {
 
             // 추가된 이미지를 데이터베이스에 추가
             if (addedImages.length > 0) {
-                const imagesToUpdate = addedImages[0].update.map(image => ({ url: image.url, boardId: board.seq }));
-
+                const imagesToUpdate = addedImages.map(imageUrl => ({ url: imageUrl, boardId: board.seq }));
                 await prisma.image.createMany({
                     data: imagesToUpdate,
                 });
@@ -193,14 +192,14 @@ export const updateBoard = async (req, res, next) => {
 
 export const Like = async(req, res, next) => {
     try {
-        const board = await prisma.board.findFirst({ where: { id: req.params.id }});
+        const board = await prisma.board.findFirst({ where: { seq: parseInt(req.params.id) }});
 
         if(!board){
             return res.status(404).send('없는 게시글 입니다.');
         }
 
         await prisma.board.update({
-            where: { id: board.id },
+            where: { seq: board.seq },
             data: {
                 likes: {
                     connect: { id: req.user.id }
@@ -216,6 +215,7 @@ export const Like = async(req, res, next) => {
 
 export const unLike = async(req, res, next) => {
     try {
+        
         const board = await prisma.board.findFirst({ where: { id: req.params.id }});
 
         if(!board){

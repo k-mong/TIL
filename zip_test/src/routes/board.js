@@ -37,7 +37,7 @@ router.post('/:id/updateBoard', isLoggedIn, updateBoard);
 
 router.delete('/:id/deleteBoard', deleteBoard);
 
-router.post('/:id/Like', Like);
+router.post('/:id/Like', isLoggedIn, Like);
 
 router.delete('/:id/unLike', unLike);
 
