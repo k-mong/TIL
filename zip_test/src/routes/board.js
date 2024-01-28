@@ -28,10 +28,10 @@ const upload = multer({
     limits: { fileSize: 20 * 1024 * 1024},
 });
 
-//router.post('/img', isLoggedIn, upload.array('img', 10), afterUploadImage)
 
 const upload2 = multer();
 router.post('/uploadBoard', isLoggedIn, upload.array('roomImage', 10), uploadBoard);
+//router.post('/uploadBoard', isLoggedIn, uploadBoard);
 
 router.post('/:id/updateBoard', isLoggedIn, updateBoard);
 

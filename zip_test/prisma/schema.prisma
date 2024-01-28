@@ -91,7 +91,7 @@ model Image{
   createdAt DateTime @default(now())
 
   boardId Int
-  board Board @relation(fields: [boardId], references: [seq])
+  board Board @relation(fields: [boardId], references: [seq], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Like {

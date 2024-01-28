@@ -77,9 +77,8 @@ export const deleteBoard = async (req, res, next) => {
 };
 
 
-
-// 게시글 수정
 /*
+// 게시글 수정
 export const updateBoard = async (req, res, next) => {
     try {
         const seqId = parseInt(req.params.id, 10);
@@ -88,25 +87,29 @@ export const updateBoard = async (req, res, next) => {
         console.log('board:', board);
 
         const { deposit, month, roomCost, datePicker, title, textArea } = req.body;
-        const imageUrl = req.body.roomImage || [];
-        const imageUpdateData = Array.isArray(imageUrl)
-  ? imageUrl.map(url => ({ where: { url }, data: { url } }))
-  : [];
+        
         if(board) {
             await prisma.board.update({
                 where: { seq: board.seq },
                 data: {
-                    deposit,
-                    month,
-                    roomCost,
+                    deposit: parseInt(deposit, 10),
+                    month: parseInt(month, 10),
+                    roomCost: parseInt(roomCost, 10),
                     datePicker,
                     title,
                     textArea,
-                    roomImage: {
-                        set: imageUpdateData,
-                      },
                 },
             });
+            const updateImg = req.files.map((file) => ({
+                where: { boardId: board.seq },
+                data: {
+                    url: `/img/${file.filename}`,
+                },
+            }));
+            await Promise.all(
+                updateImg.map((image) => prisma.image.update({ data: image}))
+            )
+
             res.send('게시글이 수정됐습니다.');
         } else {
             res.status(404).send('게시글이 존재하지 않습니다.');
@@ -189,6 +192,7 @@ export const updateBoard = async (req, res, next) => {
         next(error);
     }
 };
+
 
 export const Like = async(req, res, next) => {
     try {
